@@ -154,8 +154,7 @@ To make this droppable onto a record page:
 </LightningComponentBundle>
 ```
 
->**Important Note**:
-You only need the `@track` decorator now for tracking data within a collection or JS object. In other words, most of the time you don't need it unless you're doing more advanced data manipulation/assignment in JS. 
+>**Important Note**: You only need the `@track` decorator now for tracking data within a collection or JS object. In other words, most of the time you don't need it unless you're doing more advanced data manipulation/assignment in JS. 
 
 ##### 3) Event Driven
 
@@ -180,8 +179,7 @@ Since `parentSuppliedName` is reactive, any changes to it on the `<c-store-front
 ...
 ```
 
->**Important Note**:
-LWC forces *one-way data binding* meaning that if a child were to change the value of that same property, it will not automatically tell the parent. You have to do that through an **event** which we will cover next.
+>**Important Note**: LWC forces *one-way data binding* meaning that if a child were to change the value of that same property, it will not automatically tell the parent. You have to do that through an **event** which we will cover next.
 
 **Child to Parent - Events - No Payload**
 
@@ -241,8 +239,7 @@ So then, now each `<c-item>` has a button which can clear out the `itemName`. Yo
 ```
 So then now when that specific `<c-item>` clears its `itemName` prop, it will let the parent know!
 
->**Important Note**
-`dispatchEvent` and `CustomEvent` are both part of the browser spec found [here](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent) and [here](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent). The naming conventions for events make things easier to parent listeners if they are all lowercase.
+>**Important Note**: `dispatchEvent` and `CustomEvent` are both part of the browser spec found [here](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent) and [here](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent). The naming conventions for events make things easier to parent listeners if they are all lowercase.
 
 **Child to Parent - Events - Payloads**
 
@@ -269,8 +266,7 @@ This is an example of sending the `itemName` property in an event before clearin
     }
 ...
 ```
->**Important Note**
-The `clear` event payload uses a JS Object with a property called `detail`. You can actually use anything as the payload including only a string but best practice dictates that these can be standardized. You'll notice a lot of the salesforce events are wrapped with `detail` and I think you should follow suit. You can include *another* object as part of `detail` and then you can get into complex payloads such as `evt.detail.prop1` and `evt.detail.prop2`.
+>**Important Note**: The `clear` event payload uses a JS Object with a property called `detail`. You can actually use anything as the payload including only a string but best practice dictates that these can be standardized. You'll notice a lot of the salesforce events are wrapped with `detail` and I think you should follow suit. You can include *another* object as part of `detail` and then you can get into complex payloads such as `evt.detail.prop1` and `evt.detail.prop2`.
 
 The above example isn't super useful, but consider the following:
 
@@ -305,8 +301,7 @@ The above example isn't super useful, but consider the following:
 
 You might be wondering why the payload is now removed. That's because there is another way to access information about where the event was coming from using `evt.target`. This is useful to differentiate from which child the event is coming from.
 
->**Hands-on - Exercise 1**
-Change `handleClear` on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Use the following template to start:
+>**Exercise 1**: Change `handleClear` on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Use the following template to start:
 
 ```html
 <!-- storeFront.html -->
