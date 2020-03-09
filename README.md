@@ -334,6 +334,8 @@ You might be wondering why the payload is now removed. That's because there is a
 </template>
 ```
 
+If you get stuck here, branch `exercise-2` has the answer(s). From now on every following exercise branch will contain the answers to the previous step. You can click [here](https://github.com/tsalb/intro-to-lwcs/tree/exercise-2#parent-to-child---accessing-public-properties) to go to the next branch and section.
+
 #### Parent to Child - Accessing public properties
 ====================
 <!-- Psuedo-spoiler tags can be formed like this. Line break is required! -->
