@@ -334,7 +334,7 @@ You might be wondering why the payload is now removed. That's because there is a
 </template>
 ```
 
-<!-- Exercise 1 Answer - no spoiler tag support so this is close enough. Line break is required! -->
+<!-- Psuedo-spoiler tags can be formed like this. Line break is required! -->
 <details>
     <summary><b>Exercise 1 Answer</b></summary>
 
@@ -351,9 +351,169 @@ You might be wondering why the payload is now removed. That's because there is a
                 console.log(evt.target.name);
                 break;
         }
-
     }
 ...
 ```
 </details>
+
+#### Parent to Child - Accessing public properties
+
+Now we have communication up our component tree.
+
+What if we wanted a "Clear All" type of button? Wouldn't that be much easier?
+
+```html
+<!-- storeFront.html -->
+...
+        <div slot="actions">
+            <lightning-layout vertical-align="end">                
+                <lightning-input onkeyup={inputKeyUp}></lightning-input>
+                <lightning-button
+                    class="slds-p-left_xx-small"
+                    label="Clear All"
+                    onclick={clearAll}
+                ></lightning-button>
+            </lightning-layout>
+        </div>
+...
+```
+```js
+// storeFront.js
+...
+    clearAll(evt) {
+        const children = this.template.querySelectorAll('c-item');
+        for (let item of children) {
+            item.itemName = '';
+        }
+    }
+...
+```
+
+#### Parent to Child - Accessing public methods / functions
+
+We got lucky that the `itemName` was marked as public. What if we wanted a more complex function to be run or if we wanted to modify something on a child that wasn't public?
+
+We can ask the child to expose one of its functions just like how it exposes its properties and then call the function from `<c-store-front>`
+
+```js
+// item.js
+...
+    @api
+    clearName() {
+        this.dispatchEvent(new CustomEvent('clear'));
+        this.itemName = '';
+    }
+...
+```
+```js
+// storeFront.js
+...
+    clearAll(evt) {
+        const children = this.template.querySelectorAll('c-item');
+        for (let item of children) {
+            item.clearName();
+        }
+    }
+...
+```
+
+The added benefit is that the previous clearing of `parentSuppliedName` will work as before.
+
+>**Important Note**: Both `querySelector` and `querySelectorAll` are part of the browser but the `synthetic-shadow` requires that you use `this.template` to refer to the current component. Otherwise, you can read more about the spec [here](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) and the official lwc docs [here](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/create_javascript_methods).
+
+#### Intercomponent communication
+
+Right now is an unfortunate time since there is no platform supported way to communicate between LWCs. There are primarily two options:
+
+1) Fill in the gap using the lwc-recipe's `pubsub` component. There are official samples from that [repo](https://github.com/trailheadapps/lwc-recipes).
+
+2) Wait for [Lightning Message Channel](https://developer.salesforce.com/blogs/2019/10/lightning-message-service-developer-preview.html) to GA out of beta. I cover some of its use in my other [repo](https://github.com/tsalb/lwc-utils/commit/e2330c539eef2e5b40ff8e93e6d460ecbeb3b350).
+
+We won't be covering those in this example as they are a bit out of intro depth.
+
+### 3) Standards Driven
+
+As the browser spec becomes improved over time with more APIs, LWC will grow as well. While we don't have time to get into every topic covered I'll highlight some of the more useful ones.
+
+1) Data looping
+    - [for...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of)
+    - [for...in](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in)
+2) Data manipulation
+    - [.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+    - [.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+    - [.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
+3) Data manipulation for validation
+    - [.some()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
+    - [.every()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every)
+4) [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) for flow control.
+    - JS is single threaded so server side calls or multiple functions might need to wait for a callback
+    - Calls to apex and `@wire` within an LWC are all promise-ified. Get comfortable with promises.
+    - [Async await](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await) is syntactic sugar on top of promises to make them easier to use.
+        - See [here](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/get_started_supported_javascript) on current limitations for async await.
+5) [Object spread](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) for property control.
+
+### 4) HTML Directives
+
+If you were wondering how to deal with collections or dynamic visibility, these are wrapped up in what are called Directives. The [official docs](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/lwc.reference_directives) have a more descriptive summary and so please refer to that.
+
+However, I will highlight the two major ones here:
+
+1) Loop Control
+    - **`for:each={array}`**, **`for:item="currentItem"`**, and **`key`**
+    -   ```html
+        <template for:each={contacts} for:item="contact">
+            <li key={contact.Id}>
+                {contact.Name}, {contact.Title}
+            </li>
+        </template>
+        ```
+
+2) Dynamic Visibility
+    - **`if:true|false={expression}`**
+    -   ```html
+        <template if:true={showSpinner}>
+            ...
+        </template>
+        ```
+
+>**Exercise 2**: Right now we are using hardcoded `<c-item>` inside the template for `<c-store-front>` but we want to change that. Instead, we want it to run off the `storeFrontItems` collection in `storeFront.js`. We will be deprecating the `parentSuppliedName` and related features but keeping the `clear` event features. Use the following template and js to start:
+
+```html
+<template>
+    <lightning-card>
+        <div slot="actions">
+            <lightning-layout vertical-align="end">                
+                <lightning-button
+                    class="slds-p-left_xx-small"
+                    label="Clear All"
+                    onclick={clearAll}
+                ></lightning-button>
+            </lightning-layout>
+        </div>
+        <c-item name="first" item-name="Milk" onclear={handleClear}></c-item>
+        <c-item name="second" item-name="Eggs" onclear={handleClear}></c-item>
+        <c-item name="third" onclear={handleClear}></c-item>
+        <c-item name="fourth" onclear={handleClear}></c-item>
+    </lightning-card>
+</template>
+```
+```js
+import { LightningElement } from 'lwc';
+
+export default class StoreFront extends LightningElement {
+    storeFrontItems = ['Milk', 'Eggs', 'Bread', null];
+
+    handleClear(evt) {
+        console.log(evt.target.name);
+    }
+
+    clearAll() {
+        const children = this.template.querySelectorAll('c-item');
+        for (let item of children) {
+            item.clearName();
+        }
+    }
+}
+```
+
 
