@@ -1,0 +1,25 @@
+<template>
+    <lightning-card>
+        <div slot="actions">
+            <lightning-input onkeyup={inputKeyUp}></lightning-input>
+        </div>
+        Parent Supplied Name: {parentSuppliedName}
+        <c-item
+            name="first_item"
+            item-name="Milk"
+            onclear={handleClear}
+        ></c-item>
+        <c-item
+            name="second_item"
+            item-name="Eggs"
+            onclear={handleClear}
+        ></c-item>
+        <c-item
+            name="third_item"
+            item-name={parentSuppliedName}
+            onclear={handleClear}
+        ></c-item>
+        <!-- No props set means fallback to what's in child component -->
+        <c-item name="fourth_item" onclear={handleClear}></c-item>
+    </lightning-card>
+</template>
