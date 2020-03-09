@@ -156,152 +156,16 @@ To make this droppable onto a record page:
 
 >**Important Note**: You only need the `@track` decorator now for tracking data within a collection or JS object. In other words, most of the time you don't need it unless you're doing more advanced data manipulation/assignment in JS. 
 
-### 3) Event Driven
+### Hands on exercises and next section(s)
 
-There are a handful of communication models going from basic to advanced. These communications models are how you pass data up and down your component tree.
+Starting from here, the rest of this tutorial and any hands-on will be nested under each branch like so:
 
-![datatable](/readme-images/event-comms-model.png?raw=true)
-
-#### Parent to Child - Attributes / Properties
-
-As we saw in the above example, the first `<c-item>` is passing an explicitly set `string` value of `"Milk"` into the child.
-
-The other `<c-item>` here is taking the `parentSuppliedName` property from the parent `<c-store-front>` via something called **binding**. The child's `item-name` attribute is *bound* to the parent property called `parentSuppliedName`.
-
-Since `parentSuppliedName` is reactive, any changes to it on the `<c-store-front>` will get sent to the child `<c-item>` component.
-
-```html
-<!-- storeFront.html -->
-...
-    <c-item item-name="Milk"></c-item>
-    ...
-    <c-item item-name={parentSuppliedName}></c-item>
+```
+master
+- exercise-1
+- exercise-2
+- exercise-3
 ...
 ```
-
->**Important Note**: LWC forces *one-way data binding* meaning that if a child were to change the value of that same property, it will not automatically tell the parent. You have to do that through an **event** which we will cover next.
-
-#### Child to Parent - Events - No Payload
-
-First, we need to adjust the example above so that each child `<c-item>` has something it can do only within itself. We'll be using `<lightning-layout>` to help organize it:
-
-```html
-<!-- item.html -->
-<template>
-    <lightning-layout vertical-align="center">
-        <label>{itemName}</label>
-        <lightning-button 
-            class="slds-p-left_small"
-            label="Clear Name"
-            onclick={clearName}
-        ></lightning-button>
-    </lightning-layout>
-</template>
-```
-```javascript
-// item.js
-import { LightningElement, api } from 'lwc';
-
-export default class Item extends LightningElement {
-    @api itemName = 'New Item';
-
-    clearName() {
-        this.itemName = '';
-    }
-}
-```
-
-So then, now each `<c-item>` has a button which can clear out the `itemName`. You'll see that `Parent Supplied Name: {parentSuppliedName}` doesn't change. This is due to the *one-way data binding*. State passed from parent to child and if the child mutates it, remains on the child unless we notify the parent via an event like this:
-
-```javascript
-// item.js
-...
-    clearName() {
-        this.dispatchEvent(new CustomEvent('clear'));
-        this.itemName = '';
-    }
-...
-```
-```html
-<!-- storeFront.html -->
-...
-    <c-item item-name={parentSuppliedName} onclear={handleClear}></c-item>
-...
-```
-```javascript
-// storeFront.js
-...
-    handleClear() {
-        console.log('cleared');
-        this.parentSuppliedName = '';
-    }
-...
-```
-So then now when that specific `<c-item>` clears its `itemName` prop, it will let the parent know!
-
->**Important Note**: `dispatchEvent` and `CustomEvent` are both part of the browser spec found [here](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent) and [here](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent). The naming conventions for events make things easier to parent listeners if they are all lowercase.
-
-#### Child to Parent - Events - Payloads
-
-Payloads carry information about the child to any components listening above. By default, it will only *bubble* to the direct parent. You can modify this behavior but we won't be getting in that here. Read here on granular control for [event propagation](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/events_propagation).
-
-This is an example of sending the `itemName` property in an event before clearing it out on the child.
-
-```javascript
-// item.js
-...
-    clearName() {
-        this.dispatchEvent(new CustomEvent('clear', { detail: this.itemName }));
-        this.itemName = '';
-    }
-...
-```
-```javascript
-// storeFront.js
-...
-    handleClear(evt) {
-        const clearedItemName = evt.detail;
-        console.log(clearedItemName); // outputs the previous value of 'itemName'
-        this.parentSuppliedName = '';
-    }
-...
-```
->**Important Note**: The `clear` event payload uses a JS Object with a property called `detail`. You can actually use anything as the payload including only a string but best practice dictates that these can be standardized. You'll notice a lot of the salesforce events are wrapped with `detail` and I think you should follow suit. You can include *another* object as part of `detail` and then you can get into complex payloads such as `evt.detail.prop1` and `evt.detail.prop2`.
-
-The above example isn't *super* useful, but consider the next section.
-
-#### Child to Parent - Event Target
-
-```javascript
-// item.js
-...
-    clearName() {
-        this.dispatchEvent(new CustomEvent('clear'));
-        this.itemName = '';
-    }
-...
-```
-```html
-<!-- storeFront.html -->
-...
-        <c-item
-            name="third_item"
-            item-name={parentSuppliedName}
-            onclear={handleClear}
-        ></c-item>
-...
-```
-```javascript
-// storeFront.js
-...
-    handleClear(evt) {
-        const itemIdentifier = evt.target.name;
-        console.log(itemIdentifier); // outputs 'third_item'
-    }
-...
-```
-
-You might be wondering why the payload is now removed. That's because there is another way to access information about where the event was coming from using `evt.target`. This is useful to differentiate from which child the event is coming from.
-
->**Important Note**: Starting from here, the rest of this Readme tutorial and the exercises will be nested under each branch. Go back to the top and switch branches to `exercise-1` and onwards to see each subsequent step.
+Why do this? It's easier to change some of the repo code this way so that you can always `deploy` it to your sandbox. [Click here to go to the next section](https://github.com/tsalb/intro-to-lwcs/tree/exercise-1#3-event-driven).
 
