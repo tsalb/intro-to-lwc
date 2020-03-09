@@ -482,6 +482,7 @@ However, I will highlight the two major ones here:
 >**Exercise 2**: Right now we are using hardcoded `<c-item>` inside the template for `<c-store-front>` but we want to change that. Instead, we want it to run off the `storeFrontItems` collection in `storeFront.js`. We will be deprecating the `parentSuppliedName` and related features but keeping the `clear` event features. Use the following template and js to start:
 
 ```html
+<!-- storeFront.html -->
 <template>
     <lightning-card>
         <div slot="actions">
@@ -501,6 +502,7 @@ However, I will highlight the two major ones here:
 </template>
 ```
 ```js
+// storeFront.js
 import { LightningElement } from 'lwc';
 
 export default class StoreFront extends LightningElement {
