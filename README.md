@@ -167,5 +167,7 @@ master
 - exercise-3
 ...
 ```
-Why do this? It's easier to change some of the repo code this way so that you can always `deploy` it to your sandbox. [Click here to go to the next section](https://github.com/tsalb/intro-to-lwcs/tree/exercise-1#3-event-driven).
+Why do this? It's easier to change some of the repo code this way so that you can always `deploy` it to your sandbox.
+
+[Click here to go to the next section](https://github.com/tsalb/intro-to-lwcs/tree/exercise-1#3-event-driven).
 
