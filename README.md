@@ -303,34 +303,5 @@ The above example isn't *super* useful, but consider the next section.
 
 You might be wondering why the payload is now removed. That's because there is another way to access information about where the event was coming from using `evt.target`. This is useful to differentiate from which child the event is coming from.
 
->**Exercise 1**: Change `handleClear` on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Use the following template to start:
-
-```html
-<!-- storeFront.html -->
-<template>
-    <lightning-card>
-        <div slot="actions">
-            <lightning-input onkeyup={inputKeyUp}></lightning-input>
-        </div>
-        Parent Supplied Name: {parentSuppliedName}
-        <c-item
-            name="first_item"
-            item-name="Milk"
-            onclear={handleClear}
-        ></c-item>
-        <c-item
-            name="second_item"
-            item-name="Eggs"
-            onclear={handleClear}
-        ></c-item>
-        <c-item
-            name="third_item"
-            item-name={parentSuppliedName}
-            onclear={handleClear}
-        ></c-item>
-        <!-- No props set means fallback to what's in child component -->
-        <c-item name="fourth_item" onclear={handleClear}></c-item>
-    </lightning-card>
-</template>
-```
+>**Important Note**: Starting from here, the rest of this Readme tutorial and the exercises will be nested under each branch. Go back to the top and switch branches to `exercise-1` and onwards to see each subsequent step.
 
