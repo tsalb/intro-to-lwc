@@ -270,7 +270,7 @@ This is an example of sending the `itemName` property in an event before clearin
 
 The above example isn't *super* useful, but consider the next section.
 
-## Child to Parent - Event Target
+#### Child to Parent - Event Target
 
 ```javascript
 // item.js
