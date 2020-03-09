@@ -361,7 +361,7 @@ If you get stuck here, branch `exercise-2` has the answer(s). From now on every 
 
 ====================
 
-Now we have communication up our component tree.
+Now we have communication up our component tree with the parent `handleClear` function properly handling clearing the `parentSuppliedName`.
 
 What if we wanted a "Clear All" type of button? Wouldn't that be much easier?
 
