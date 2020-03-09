@@ -1,3 +1,4 @@
+// storeFront.js
 import { LightningElement } from 'lwc';
 
 export default class StoreFront extends LightningElement {
@@ -5,9 +6,5 @@ export default class StoreFront extends LightningElement {
 
     inputKeyUp(evt) {
         this.parentSuppliedName = evt.target.value.toUpperCase();
-    }
-
-    handleClear(evt) {
-        console.log(evt.target.name);
     }
 }
