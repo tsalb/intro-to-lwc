@@ -483,7 +483,7 @@ However, I will highlight the two major ones here:
 >
 >We will be deprecating the `parentSuppliedName` and related features but keeping the `clear` event features.
 >
->**Extra Credit**: Use the `for:index` directive to properly track the `name` attribute so that `handleClear` can still differentiate which `<c-item>` the click originated from.
+>**Extra Credit**: Use the `for:index` directive to bound to the `name` attribute so that `handleClear` can still differentiate which `<c-item>` the click originated from.
 >
 >Use the following template and js to start:
 
