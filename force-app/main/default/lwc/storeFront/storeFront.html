@@ -9,9 +9,13 @@
                 ></lightning-button>
             </lightning-layout>
         </div>
-        <c-item name="first" item-name="Milk" onclear={handleClear}></c-item>
-        <c-item name="second" item-name="Eggs" onclear={handleClear}></c-item>
-        <c-item name="third" onclear={handleClear}></c-item>
-        <c-item name="fourth" onclear={handleClear}></c-item>
+        <template for:each={storeFrontItems} for:item="item" for:index="idx">
+            <c-item
+                name={idx}
+                key={item}
+                item-name={item}
+                onclear={handleClear}
+            ></c-item>
+        </template>
     </lightning-card>
 </template>
