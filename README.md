@@ -335,6 +335,7 @@ You might be wondering why the payload is now removed. That's because there is a
 ```
 
 <!-- Psuedo-spoiler tags can be formed like this. Line break is required! -->
+[](#exercise-1-answer)
 <details>
     <summary><b>Exercise 1 Answer</b></summary>
 
