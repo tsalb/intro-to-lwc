@@ -334,3 +334,5 @@ You might be wondering why the payload is now removed. That's because there is a
 </template>
 ```
 
+If you get stuck here, branch `exercise-2` has the answer(s). From now on every following exercise branch will contain the answers to the previous step.
+
