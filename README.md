@@ -1,4 +1,4 @@
-#  Intro to LWCs
+##  Intro to LWCs
 
 Many people want to start with writing LWCs but have a hard time finding where to start (even with the Trailheads). This resource serves as fundamental knowledge to supplement other resources.
 
@@ -6,7 +6,7 @@ You can treat this resource as an index of nouns and table of contents for all t
 
 We will be using [Org Development Model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models/#org-development-model) nouns such as `deploy` and `retrieve` in the examples below.
 
-### Why Org Development Model?
+## Why Org Development Model?
 
 If you're using scratch orgs in your day to day, it's likely you're already familiar with the sfdx-cli. So then, you can translate the lwc specific knowledge here to the `pull` and `push` model.
 
@@ -14,7 +14,7 @@ Most Lightning orgs out there are unlikely to be net new implementations so a ro
 
 This is the fastest way to start producing LWCs. This is also likely the most popular way since there are still some slight gaps within the scratch org process for truly complex orgs to fully adopt them (without extra scripting) as part of their SDLC.
 
-### What about Aura?
+## What about Aura?
 
 Migration strategy and comparison will not be covered. I have other repos that you can look at to get into that [here](https://github.com/tsalb/lwc-utils).
 
@@ -22,7 +22,7 @@ As much as both Salesforce won't admit and you dont wan't to, there are still si
 
 We won't be covering those here.
 
-### Browser and General JS Knowledge
+## Browser and General JS Knowledge
 
 LWC follows web standards adopted by most major browsers. That means that a lot of the framework you see is actually just an abstraction layer on top of the JS engine that lives inside most major browsers. This is what LWC-Open Source (LWC-OSS) is. On-Platform LWC (LWC) is a few steps behind LWC-OSS because standards and conventions get hardened there first and then adopted into the platform.
 
@@ -36,7 +36,7 @@ The **tl;dr;** for Shadow DOM is that the LWC framework mostly deals with this a
 
 [More reading on Web Components and Shadow DOM in general](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 
-### Org Caching and CDN
+## Org Caching and CDN
 
 The platform aggressively caches things like LWCs which is useful in production to speed up the user experience. However, it's not so great for development when you want to see rapid changes you make to a sandbox.
 
@@ -48,9 +48,9 @@ Setup > Security > Session Management > Caching >
 - Enable Content Delivery Network (CDN) for Lightning Component framework
 ```
 
-### Fundamentals of LWC
+## Fundamentals of LWC
 
-##### 1) Naming conventions and what goes into an LWC bundle
+### 1) Naming conventions and what goes into an LWC bundle
 
 There are two types of naming conventions for LWC: `kebab-case` and `camelCase`.
 
@@ -84,7 +84,7 @@ If you were to use this component available to be used in another one, you need 
 
 Confusing? Yes. Will you get use to it? Yes.
 
-##### 2) Reactive properties and Decorators
+### 2) Reactive properties and Decorators
 
 The framework handles the abstraction for reactivity natively. All properties referenced in the `template` (the html file) are by default reactive. This just means that if a new value changes in the JS controller, the `template` will automatically see those changes. It is *reactive*.
 
@@ -156,13 +156,13 @@ To make this droppable onto a record page:
 
 >**Important Note**: You only need the `@track` decorator now for tracking data within a collection or JS object. In other words, most of the time you don't need it unless you're doing more advanced data manipulation/assignment in JS. 
 
-##### 3) Event Driven
+### 3) Event Driven
 
 There are a handful of communication models going from basic to advanced. These communications models are how you pass data up and down your component tree.
 
 ![datatable](/readme-images/event-comms-model.png?raw=true)
 
-**Parent to Child - Attributes / Properties**
+#### Parent to Child - Attributes / Properties
 
 As we saw in the above example, the first `<c-item>` is passing an explicitly set `string` value of `"Milk"` into the child.
 
@@ -181,7 +181,7 @@ Since `parentSuppliedName` is reactive, any changes to it on the `<c-store-front
 
 >**Important Note**: LWC forces *one-way data binding* meaning that if a child were to change the value of that same property, it will not automatically tell the parent. You have to do that through an **event** which we will cover next.
 
-**Child to Parent - Events - No Payload**
+#### Child to Parent - Events - No Payload
 
 First, we need to adjust the example above so that each child `<c-item>` has something it can do only within itself. We'll be using `<lightning-layout>` to help organize it:
 
@@ -241,7 +241,7 @@ So then now when that specific `<c-item>` clears its `itemName` prop, it will le
 
 >**Important Note**: `dispatchEvent` and `CustomEvent` are both part of the browser spec found [here](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent) and [here](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent). The naming conventions for events make things easier to parent listeners if they are all lowercase.
 
-**Child to Parent - Events - Payloads**
+#### Child to Parent - Events - Payloads
 
 Payloads carry information about the child to any components listening above. By default, it will only *bubble* to the direct parent. You can modify this behavior but we won't be getting in that here. Read here on granular control for [event propagation](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/events_propagation).
 
@@ -268,7 +268,9 @@ This is an example of sending the `itemName` property in an event before clearin
 ```
 >**Important Note**: The `clear` event payload uses a JS Object with a property called `detail`. You can actually use anything as the payload including only a string but best practice dictates that these can be standardized. You'll notice a lot of the salesforce events are wrapped with `detail` and I think you should follow suit. You can include *another* object as part of `detail` and then you can get into complex payloads such as `evt.detail.prop1` and `evt.detail.prop2`.
 
-The above example isn't super useful, but consider the following:
+The above example isn't *super* useful, but consider the next section.
+
+## Child to Parent - Event Target
 
 ```javascript
 // item.js
