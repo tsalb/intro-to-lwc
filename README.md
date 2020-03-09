@@ -334,11 +334,11 @@ You might be wondering why the payload is now removed. That's because there is a
 </template>
 ```
 
+#### Parent to Child - Accessing public properties
+====================
 <!-- Psuedo-spoiler tags can be formed like this. Line break is required! -->
-[](#exercise-1-answer)
 <details>
-    <summary><b>Exercise 1 Answer</b></summary>
-
+    <summary>Answer to Exercise 1</summary>
 
 ```js
 // storeFront.js
@@ -357,7 +357,7 @@ You might be wondering why the payload is now removed. That's because there is a
 ```
 </details>
 
-#### Parent to Child - Accessing public properties
+====================
 
 Now we have communication up our component tree.
 
