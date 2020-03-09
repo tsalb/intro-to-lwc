@@ -68,7 +68,7 @@ The more detailed rules are [here](https://developer.salesforce.com/docs/compone
 
 The actual `myComponent.js` file would use the following `MyComponent` constructor. Notice the capitalized `M`.
 
-```javascript
+```js
 import { LightningElement } from 'lwc';
 export default class MyComponent extends LightningElement {
     
@@ -98,7 +98,7 @@ Decorators `@api` and `@wire` are abstractions which tell the framework that the
     </div>
 </template>
 ```
-```javascript
+```js
 // item.js
 import { LightningElement, api } from 'lwc';
 
@@ -126,7 +126,7 @@ But this example in itself isn't useful nor a good example of what `@api` does. 
 </template>
 
 ```
-```javascript
+```js
 // storeFront.js
 import { LightningElement } from 'lwc';
 
@@ -198,7 +198,7 @@ First, we need to adjust the example above so that each child `<c-item>` has som
     </lightning-layout>
 </template>
 ```
-```javascript
+```js
 // item.js
 import { LightningElement, api } from 'lwc';
 
@@ -213,7 +213,7 @@ export default class Item extends LightningElement {
 
 So then, now each `<c-item>` has a button which can clear out the `itemName`. You'll see that `Parent Supplied Name: {parentSuppliedName}` doesn't change. This is due to the *one-way data binding*. State passed from parent to child and if the child mutates it, remains on the child unless we notify the parent via an event like this:
 
-```javascript
+```js
 // item.js
 ...
     clearName() {
@@ -228,7 +228,7 @@ So then, now each `<c-item>` has a button which can clear out the `itemName`. Yo
     <c-item item-name={parentSuppliedName} onclear={handleClear}></c-item>
 ...
 ```
-```javascript
+```js
 // storeFront.js
 ...
     handleClear() {
@@ -247,7 +247,7 @@ Payloads carry information about the child to any components listening above. By
 
 This is an example of sending the `itemName` property in an event before clearing it out on the child.
 
-```javascript
+```js
 // item.js
 ...
     clearName() {
@@ -256,7 +256,7 @@ This is an example of sending the `itemName` property in an event before clearin
     }
 ...
 ```
-```javascript
+```js
 // storeFront.js
 ...
     handleClear(evt) {
@@ -272,7 +272,7 @@ The above example isn't *super* useful, but consider the next section.
 
 #### Child to Parent - Event Target
 
-```javascript
+```js
 // item.js
 ...
     clearName() {
@@ -291,7 +291,7 @@ The above example isn't *super* useful, but consider the next section.
         ></c-item>
 ...
 ```
-```javascript
+```js
 // storeFront.js
 ...
     handleClear(evt) {
@@ -303,7 +303,7 @@ The above example isn't *super* useful, but consider the next section.
 
 You might be wondering why the payload is now removed. That's because there is another way to access information about where the event was coming from using `evt.target`. This is useful to differentiate from which child the event is coming from.
 
->**Exercise 1**: Change `handleClear` on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Use the following template to start:
+>**Exercise 1**: Use a switch/case statement `handleClear` on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Clicks on any other item should just produce `console.log(evt.target.name)`. Use the following template to start:
 
 ```html
 <!-- storeFront.html -->
@@ -333,4 +333,27 @@ You might be wondering why the payload is now removed. That's because there is a
     </lightning-card>
 </template>
 ```
+
+<!-- Exercise 1 Answer - no spoiler tag support so this is close enough. Line break is required! -->
+<details>
+    <summary><b>Exercise 1 Answer</b></summary>
+
+
+```js
+// storeFront.js
+...
+    handleClear(evt) {
+        switch (evt.target.name) {
+            case 'third_item':
+                this.parentSuppliedName = '';
+                break;
+            default:
+                console.log(evt.target.name);
+                break;
+        }
+
+    }
+...
+```
+</details>
 

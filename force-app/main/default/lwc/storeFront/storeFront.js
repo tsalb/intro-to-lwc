@@ -8,6 +8,14 @@ export default class StoreFront extends LightningElement {
     }
 
     handleClear(evt) {
-        console.log(evt.target.name);
+        switch (evt.target.name) {
+            case 'third_item':
+                this.parentSuppliedName = '';
+                break;
+            default:
+                console.log(evt.target.name);
+                break;
+        }
+
     }
 }
