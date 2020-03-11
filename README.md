@@ -528,5 +528,138 @@ export default class StoreFront extends LightningElement {
 }
 ```
 
+### 5) LWC Lifecycle and Flexipage Context
+====================
+<!-- Psuedo-spoiler tags can be formed like this. Line break is required! -->
+<details>
+    <summary>Answer to Exercise 2</summary>
 
+```html
+<!-- storeFront.html -->
+<template>
+    <lightning-card>
+        <div slot="actions">
+            <lightning-layout vertical-align="end">
+                <lightning-button
+                    class="slds-p-left_xx-small"
+                    label="Clear All"
+                    onclick={clearAll}
+                ></lightning-button>
+            </lightning-layout>
+        </div>
+        <template for:each={storeFrontItems} for:item="item" for:index="idx">
+            <c-item
+                name={idx}
+                key={item}
+                item-name={item}
+                onclear={handleClear}
+            ></c-item>
+        </template>
+    </lightning-card>
+</template>
+```
+</details>
+
+====================
+
+Before we get into more advanced functions, let's take a step back and look at what happens when an LWC is created on the page and some of its useful features while it does.
+
+The official docs describe the lifecycle of an LWC in [better detail](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/create_lifecycle_hooks_intro).
+
+The two more important ones are these:
+
+```js
+connectedCallback() {
+    // Do stuff when the component is inserted into the DOM.
+    // Typically this is where you would run most functions to 
+    // get apex or to get the current flexipage's Record Id.
+}
+renderedCallback() {
+    // Do stuff when the component renders. A component can render multiple times
+    // so if you want to run code only once then you can use a hasRendered Boolean.
+}
+```
+
+And, if you use the following, you can get both the `recordId` and the `objectApiName`:
+
+```js
+import { LightningElement, api } from 'lwc';
+export default class StoreFront extends LightningElement {
+    @api recordId;
+    @api objectApiName;
+
+    connectedCallback() {
+        console.log(this.recordId); //outputs a record Id, e.g. `a01xxxxxxxxxxx`
+        console.log(this.objectApiName); // outputs something like `Account`
+    }
+}
+```
+
+### 6) Serverside Apex
+
+So far all we've done is manipulate the UI with some base components and JS.
+
+For something useful, we need some data from the server. A couple of important things about serverside apex:
+
+1) It's promisified.
+2) It's immutable if @cacheable is used.
+
+We'll go into each one of those in this section, but first - this is what you need to grab a `List<Contact>` from the server. Let's assume that we put the `<c-store-front>` LWC on an `Account` record's flexipage.
+
+Go ahead and deploy this class to your org:
+
+```java
+public class StoreDataService {
+    @AuraEnabled
+    public static List<Contact> getContacts(Id accountId) {
+        return [SELECT Id, Name, Email FROM Contact WHERE AccountId =: accountId];
+    }
+}
+```
+
+And this is how an LWC would use it. I use the same JS function name as the apex method name `getContacts` but you don't have to. They can be different if you wish.
+
+```js
+import getContacts from '@salesforce/apex/StoreDataService.getContacts';
+
+export default class StoreFront extends LightningElement {
+    @api recordId;
+    ...
+    async connectedCallback() {
+        let contacts = await getContacts({accountId: this.recordId});
+    }
+    ...
+}
+```
+
+Remember the promise-ification of apex natively? `async/await` is the easier way to deal with promises. This is telling that line of code to `await` until the server is done getting the contacts.
+
+This is a much easier way to manage your serverside callouts.
+
+What then, is immutability? Consider the following scenario:
+
+```java
+public class StoreDataService {
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContacts(Id accountId) {
+        return [SELECT Id, Name, Email FROM Contact WHERE AccountId =: accountId];
+    }
+}
+```
+```js
+    ...
+    async connectedCallback() {
+        let contacts = await getContacts({accountId: this.recordId});
+        for (let con of contacts) {
+            con.Name = 'Change the Name'; // proxy trap error, aka immutability error
+        }
+    }
+    ...
+```
+
+### 7) Lightning Data Service
+
+```js
+// Todo
+```
 
