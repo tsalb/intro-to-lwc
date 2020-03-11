@@ -303,7 +303,7 @@ The above example isn't *super* useful, but consider the next section.
 
 You might be wondering why the payload is now removed. That's because there is another way to access information about where the event was coming from using `evt.target`. This is useful to differentiate from which child the event is coming from.
 
->**Exercise 1**: Use a switch/case statement `handleClear` on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Clicks on any other item should just produce `console.log(evt.target.name)`. Use the following template to start:
+>**Exercise 1**: Use a switch/case statement in the `handleClear` function on `<c-store-front>` so that it blanks out the `parentSuppliedName` property only when the third `<c-item>` is clicked. Clicks on any other item should just produce `console.log(evt.target.name)`. Use the following template to start:
 
 ```html
 <!-- storeFront.html -->
