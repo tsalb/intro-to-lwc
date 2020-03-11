@@ -528,6 +528,10 @@ export default class StoreFront extends LightningElement {
 }
 ```
 
+If you get stuck here, branch `exercise-3` has the answer(s).
+
+[Click here to go to the next branch](https://github.com/tsalb/intro-to-lwcs/tree/exercise-3#5-lwc-lifecycle-and-flexipage-context).
+
 ### 5) LWC Lifecycle and Flexipage Context
 ====================
 <!-- Psuedo-spoiler tags can be formed like this. Line break is required! -->
