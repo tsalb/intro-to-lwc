@@ -4,7 +4,25 @@ Many people want to start with writing LWCs but have a hard time finding where t
 
 You can treat this resource as an index of nouns and table of contents for all the self-learning you will need to do by yourself to get fully up to speed on LWC.
 
-We will be using [Org Development Model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models/#org-development-model) nouns such as `deploy` and `retrieve` in the examples below.
+## How to get started using this repo?
+
+1) Install [Salesforce CLI](https://developer.salesforce.com/docs/atlas.en-us.224.0.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_clihttps://developer.salesforce.com/tools/sfdxcli).
+2) Install VS Code and [Salesforce Extensions for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode).
+3) Install [Git](https://git-scm.com/downloads).
+4) [Set up](https://help.github.com/articles/set-up-git/) Git.
+5) Familiarize yourself VSCode Quick Start Trailhead [Module](https://trailhead.salesforce.com/content/learn/projects/quickstart-vscode-salesforce).
+6) Authorize your sandbox / trailhead sandbox using `SFDX: Authorize an Org` in the command palette.
+    - MacOs: Cmd+Shift+P
+    - Windows: Ctrl+Shift+P
+    - Sandbox => Any alias (something easy to type) => Enter => Provide credentials
+7) Open VSCode's terminal and navigate to a directory where you want to clone this repo:
+    - MacOs / Windows: Ctrl+`
+    - Run `git clone https://github.com/tsalb/intro-to-lwcs.git` to your desired directory.
+8) Using VSCode, File => Open the `intro-to-lwc` folder that was just cloned.
+9) On the bottom, click `No Default Org Set` and choose the sandbox you had previously authed into.
+10) In the File Explorer, navigate to the `manifest` folder and right click the `package.xml` and do `SFDX: Deploy Source in Manifest to Org`.
+
+We will be using the [Org Development Model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models/#org-development-model) nouns such as `deploy` and `retrieve` in the this guide.
 
 ## Why Org Development Model?
 
