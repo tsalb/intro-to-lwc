@@ -617,7 +617,7 @@ export default class StoreFront extends LightningElement {
 }
 ```
 
-### 6) Serverside Apex
+### 6) Serverside Apex - Imperative
 
 So far all we've done is manipulate the UI with some base components and JS.
 
@@ -678,10 +678,124 @@ public class StoreDataService {
     }
     ...
 ```
+When an `@AuraEnabled` apex method is marked with `cacheable=true`, the LWC won't let you modify the data returned directly. You'll have to copy it to a different array or use it in read only format!
 
-### 7) Lightning Data Service
+### 7) Serverside Apex - Wire
+
+We will be skipping this in detail, but know that there are **two** ways to call apex from an LWC. 
+
+Calling apex from an `@wire` is something special but the [official docs](https://developer.salesforce.com/docs/component-library/documentation/en/48.0/lwc/lwc.apex) explain it much better in detail.
+
+To both summarize that documentation and explain what a `@wire` is for the next section, please keep in mind the following points:
+
+1) `@wire` is a decorator that *wires* a property.
+    - You can wire to apex and you can wire to a *Lightning Data Service adapter* (next section).
+    - The wire can return to either the property itself:
+        ```js
+        @wire(getContacts) contacts; // not passing any parameter
+        ...
+        @wire(getContacts, {accountId: '$recordId'}) contacts; // pass the recordId parameter
+        ```
+    - OR a function callback
+        ```js
+        @wire(getContacts)
+        contactsWireFunction({error, data}) {
+            console.log(error);
+            console.log(data); // process data when wire is done
+        }
+        ...
+        @wire(getContacts, {accountId: '$recordId'})
+        contactsWireFunction({error, data}) {
+            console.log(error);
+            console.log(data); // process data when wire is done
+        }
+        ```
+2) There's a bit of magic with the `$` prefix on the property. This marks the property as *reactive*. This special prefix is **only** used with `@wire`.
+3) When a property bound to a wire changes, the wire automatically goes and fetches the function again. 
+    - You might be wondering why this is useful, consider the following example:
+        ```js
+        @wire(findContacts, { searchKey: '$searchKey' })
+        contacts;
+        ```
+    - Based on a user typing a search function, the wire automatically retrieves any contacts based on the newest `searchKey`. Soemthing like a name or email!
+4) `@wire` return an immutable property.
+    - This is because there is special caching on wire functions meaning if you pass the same parameter to the wire, it doesn't need to go to server again!
+    - Consider the following example:
+        - User searches `James` => Serverside call.
+        - User searches `Joy` => Serverside call.
+        - User searches `James` => Cached callback, no serverside call!
+5) `@wire` is always run initially on load!
+    - Sometime slightly before `connectedCallback()` which gives a silent failure since the `$input` is null. This is by design!
+    - And the second run on load when the `$input` variable is given.
+        - This can be either from the UI input OR something like `recordId` is passed from the flexipage to the wire (`$recordId`).
+6) `@wire` is not guaranteed to finish by the end of `connectedCallback()` or `renderedCallback()`. They are promisified but we dont (currently) have control over the order or when they fully return.
+    - This means chaining wires can prove challenging if order matters!
+
+### 8) Base Components
+
+You might be wondering why I consider this more advanced than apex. With apex, there is full control over exactly what you get back from the server and you have the flexibility to add / remove parameters to change how you get the data.
+
+Whatever complexty there is, at the end of the day all you're using apex for inside an LWC is just about getting data.
+
+With Base Components, complexity ranges from easy to use: 
+- `lightning-card` 
+- `lightning-record-form`
+- `lightning-record-edit-form`
+
+to really difficult:
+- `lightning-datatable`
+- `lightning-tree-grid`
+- `message-service`
+
+On top of the difficulty level for various base components to use, you're limited by the current `@api` they expose and the `events ` they emit that you can capture and use.
+
+However, they are the building blocks of your LWC. When in doubt, always check the [component library](https://developer.salesforce.com/docs/component-library/overview/components) to see if there is something that the salesforce team has already developed for you to use.
+
+### 9) Lightning Data Service
+
+The most complicated but also most useful feature of LWCs: `adapters` for Lightning Data Service (LDS).
+
+What is an adapter? You can think of these as utility functions that are given for an LWC to `import` and use. Things like getting a single record's details, updating a record and so forth. You can do all if this with LDS and not write a single line of apex!
+
+Here are some samples:
 
 ```js
-// Todo
+// Example of getting a record's data
+import { LightningElement, wire } from 'lwc';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import NAME_FIELD from '@salesforce/schema/Account.Name';
+import INDUSTRY_FIELD from '@salesforce/schema/Account.Industry';
+
+...
+
+@wire(getRecord, { recordId: '001456789012345678', fields: [NAME_FIELD, INDUSTRY_FIELD]})
+account;
+
+get industry(){
+    return getFieldValue(this.account.data, INDUSTRY_FIELD);
+}
+```
+```js
+// Example of updating a record's data
+import { LightningElement, api, wire } from 'lwc';
+import { updateRecord } from 'lightning/uiRecordApi';
+import FIRSTNAME_FIELD from '@salesforce/schema/Contact.FirstName';
+import LASTNAME_FIELD from '@salesforce/schema/Contact.LastName';
+import ID_FIELD from '@salesforce/schema/Contact.Id';
+
+...
+@api recordId;
+...
+
+const fields = {};
+fields[ID_FIELD.fieldApiName] = this.recordId;
+fields[FIRSTNAME_FIELD.fieldApiName] = 'John';
+fields[LASTNAME_FIELD.fieldApiName] = 'Doe';
+const recordInput = { fields };
+updateRecord(recordInput)
+```
+
+```js
+//todo more
 ```
 
