@@ -19,7 +19,7 @@ You can treat this resource as an index of nouns and table of contents for all t
     - MacOs: Cmd+Shift+P
     - Windows: Ctrl+Shift+P
     - Sandbox => Any alias (something easy to type) => Enter => Provide credentials
-9) On the bottom, click `No Default Org Set` and choose the sandbox you had previously authed into.
+9) If it didn't already set, at the bottom of VSCode click on `No Default Org Set` and choose the sandbox you had just authed into.
 10) In the File Explorer, navigate to the `manifest` folder and right click the `package.xml` and do `SFDX: Deploy Source in Manifest to Org`.
 
 We will be using the [Org Development Model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models/#org-development-model) nouns such as `deploy` and `retrieve` in the this guide.
