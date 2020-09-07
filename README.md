@@ -61,7 +61,7 @@ The platform aggressively caches things like LWCs which is useful in production 
 Make sure these settings are **disabled** (unchecked):
 
 ```
-Setup > Security > Session Management > Caching >
+Setup > Security > Session Settings > Caching
 - Enable secure and persistent browser caching to improve performance
 - Enable Content Delivery Network (CDN) for Lightning Component framework
 ```
