@@ -24,6 +24,18 @@ You can treat this resource as an index of nouns and table of contents for all t
 
 We will be using the [Org Development Model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models/#org-development-model) nouns such as `deploy` and `retrieve` in the this guide.
 
+## Scan the Lessons Learned wiki
+
+> Note: From when this repo was created to now (`2021-02-23`), there are no new fundamentals to LWCs at the intro level.
+
+That being said, I have compiled a list of resources and breadcrumbs of knowledge that can help you on your LWC learning journey in the [Lessons Learned](https://github.com/tsalb/intro-to-lwc/wiki#lessons-learned) wiki entry. Please keep these tidbits of information in mind as you learn LWC!
+
+They contain, for example:
+- How to manage your `sfdx-cli` installation.
+- What are popular, free, resources to start reading about Modern JS.
+- Useful ES6 functions.
+- High level mental models for LWC approach on solution design.
+
 ## Why Org Development Model?
 
 If you're using scratch orgs in your day to day, it's likely you're already familiar with the sfdx-cli. So then, you can translate the lwc specific knowledge here to the `pull` and `push` model.
